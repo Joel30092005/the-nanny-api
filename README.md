@@ -1,70 +1,123 @@
-# Getting Started with Create React App
+# Investigacion de API en React - The Nanny API
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este proyecto consiste en la creación de una API usando **json-server** que simula una base de datos de personajes de la serie *The Nanny*. El frontend está desarrollado en **React**, donde se consume la API utilizando **Axios** para mostrar la información de los personajes.
 
-## Available Scripts
+## Descripción
 
-In the project directory, you can run:
+En este proyecto se creó un servidor API RESTful utilizando **json-server**, lo cual nos permitió simular una base de datos con información de personajes. Esta API fue consumida en una aplicación frontend desarrollada con **React**, utilizando **Axios** para realizar las solicitudes HTTP y mostrar los datos.
 
-### `npm start`
+El objetivo principal fue aprender a construir y consumir APIs en una aplicación React utilizando herramientas como **json-server** para el backend y **Axios** para las solicitudes HTTP.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Herramientas Utilizadas
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **json-server**: Herramienta que permite crear un servidor API RESTful a partir de un archivo JSON.
+- **React**: Biblioteca JavaScript para construir interfaces de usuario.
+- **Axios**: Librería para realizar solicitudes HTTP en JavaScript.
+- **npm**: Gestor de paquetes para instalar dependencias.
 
-### `npm test`
+## ¿Qué es una API?
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Una **API (Interfaz de Programación de Aplicaciones)** es un conjunto de definiciones y protocolos que permiten que diferentes aplicaciones se comuniquen entre sí. En este proyecto, hemos creado una API RESTful que expone información sobre los personajes de *The Nanny*, y luego, una aplicación React consume esta API para mostrar los datos.
 
-### `npm run build`
+## Pasos Realizados
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Paso 1: Creación del Backend con **json-server**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Para crear el backend de nuestro proyecto, utilizamos **json-server**, que nos permite levantar un servidor API de forma rápida con un archivo JSON.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Instalar `json-server`**:
 
-### `npm run eject`
+   Primero, instalamos **json-server** de manera global para tenerlo disponible en nuestro sistema:
+   ```bash
+   npm install -g json-server
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Crear el archivo db.json:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Creamos un archivo db.json que contiene los datos de los personajes de la serie The Nanny. Este archivo simula una base de datos y se estructura de la siguiente manera:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+{
+  "characters": [
+    {
+      "id": 1,
+      "name": "Fran Fine",
+      "role": "Niñera"
+    },
+    {
+      "id": 2,
+      "name": "Mr. Sheffield",
+      "role": "Empresario"
+    },
+    {
+      "id": 3,
+      "name": "Niles",
+      "role": "Mayordomo"
+    }
+  ]
+}
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. Iniciar el servidor de la API:
 
-## Learn More
+Para iniciar el servidor de la API, ejecutamos el siguiente comando en el terminal:
+json-server --watch db.json --port 5000
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Esto levanta el servidor de la API en http://localhost:5000, donde podemos hacer solicitudes HTTP como GET, POST, PUT, y DELETE.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Paso 2: Creación del Frontend con React + Axios
 
-### Code Splitting
+1. Instalar React:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Si no habíamos creado la aplicación React, lo hicimos con el siguiente comando:
+npx create-react-app the-nanny-app
 
-### Analyzing the Bundle Size
+2. Instalar Axios:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Para hacer solicitudes HTTP desde el frontend, instalamos Axios ejecutando:
+npm install axios
 
-### Making a Progressive Web App
+3. Crear el componente NannyCharacters.js:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Creamos un componente llamado NannyCharacters.js, que se encarga de hacer una solicitud GET a la API de json-server para obtener la lista de personajes de The Nanny. A continuación, se muestra el código de este componente:
 
-### Advanced Configuration
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+const NannyCharacters = () => {
+  const [characters, setCharacters] = useState([]);
 
-### Deployment
+  useEffect(() => {
+    // Realizamos una solicitud GET a la API
+    axios.get('http://localhost:5000/characters')
+      .then(response => {
+        // Cuando los datos llegan, los almacenamos en el estado
+        setCharacters(response.data);
+      })
+      .catch(error => {
+        console.error('Error al obtener los personajes', error);
+      });
+  }, []);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+  return (
+    <div>
+      <h1>Personajes de The Nanny</h1>
+      <ul>
+        {characters.map(character => (
+          <li key={character.id}>
+            <strong>{character.name}</strong> - {character.role}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
-### `npm run build` fails to minify
+export default NannyCharacters;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+4. Ejecutar la aplicación React:
+
+Después de crear el componente, iniciamos la aplicación React con el siguiente comando:
+npm start
+
+### Paso 3: Conclusión y Observaciones
+El servidor de la API está corriendo en http://localhost:5000 gracias a json-server. Esta API es capaz de manejar las operaciones básicas de una base de datos como GET, POST, PUT, y DELETE.
+El frontend en React consume esta API utilizando Axios, lo que permite obtener y mostrar los personajes de manera dinámica.
+Esta configuración nos permite trabajar de manera rápida y sencilla para pruebas y desarrollo de APIs sin necesidad de configurar un backend completo.
